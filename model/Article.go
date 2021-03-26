@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"gin-blog/utils/errmsg"
+	"gorm.io/gorm"
+)
 
 type Article struct {
 	Category Category `gorm:"foreignkey:Cid"`
@@ -10,4 +13,69 @@ type Article struct {
 	Desc    string `gorm:"type:varchar(200);" json:"desc"`
 	Content string `gorm:"type:longtext;" json:"content"`
 	Img     string `gorm:"type:varchar(100);" json:"img"`
+}
+
+//新增文章
+func CreateArticle(data *Article) int {
+	err := db.Create(&data).Error
+	if err != nil {
+		return errmsg.ERROR //500
+	}
+	return errmsg.SUCCESS //200
+}
+
+//查询文类下文章列表
+func GetCateArt(id int, pageSize int, pageNum int) ([]Article, int) {
+	var cateArtList []Article
+	err := db.Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("cid =?", id).Find(&cateArtList).Error
+	if err != nil {
+		return nil, errmsg.ERROR_CATE_NOT_EXIST
+	}
+	return cateArtList, errmsg.SUCCESS
+}
+
+//查询单个文章信息
+func GetArticleInfo(id int) (Article, int) {
+	var art Article
+	err := db.Preload("Category").Where("id = ?", id).First(&art).Error
+	if err != nil {
+		return art, errmsg.ERROR_ART_NOT_EXIST
+	}
+	return art, errmsg.SUCCESS
+}
+
+//查询文章列表
+func GetArticles(pageSize int, pageNum int) ([]Article, int) {
+	var articleList []Article
+	err = db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articleList).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, errmsg.ERROR
+	}
+	return articleList, errmsg.SUCCESS
+}
+
+//编辑文章
+func EditArticle(id int, data *Article) int {
+	var art Article
+	var maps = make(map[string]interface{})
+	maps["Title"] = data.Title
+	maps["Cid"] = data.Cid
+	maps["Desc"] = data.Desc
+	maps["Content"] = data.Content
+	maps["Img"] = data.Img
+	err = db.Model(&art).Where("id = ? ", id).Updates(maps).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
+}
+
+//删除用户
+func DeleteArticle(id int) int {
+	var art Article
+	err = db.Where("id = ? ", id).Delete(&art).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }

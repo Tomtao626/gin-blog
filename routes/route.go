@@ -2,6 +2,7 @@ package routes
 
 import (
 	"gin-blog/api/v1"
+	"gin-blog/middleware"
 	"gin-blog/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -10,16 +11,32 @@ func InitRoute() {
 	gin.SetMode(utils.AppMode)
 	r := gin.Default()
 
-	route := r.Group("api/v1")
+	auth := r.Group("api/v1")
+	auth.Use(middleware.JwtToken())
 	{
 		//用户模块的路由接口
-		route.POST("user/add", v1.AddUser)
-		route.GET("users", v1.GetUsers)
-		route.PUT("user/:id", v1.EditUser)
-		route.DELETE("user/:id", v1.DelUser)
+		auth.PUT("user/:id", v1.EditUser)
+		auth.DELETE("user/:id", v1.DeleteUser)
 		//分类模块的路由接口
-
+		auth.POST("category/add", v1.AddCategory)
+		auth.PUT("category/:id", v1.EditCategory)
+		auth.DELETE("category/:id", v1.DeleteCategory)
 		//文章模块的路由接口
+		auth.POST("article/add", v1.AddArticle)
+		auth.PUT("article/:id", v1.EditArticle)
+		auth.DELETE("article/:id", v1.DeleteArticle)
+		//上传文件
+		auth.POST("upload", v1.Upload)
 	}
-	r.Run(utils.HttpPort)
+	router := r.Group("api/v1")
+	{
+		router.POST("user/add", v1.AddUser)
+		router.GET("users", v1.GetUsers)
+		router.GET("category", v1.GetCategorys)
+		router.GET("article", v1.GetArticles)
+		router.GET("article/list/:id", v1.GetCateArt)
+		router.GET("article/info/:id", v1.GetArticleInfo)
+		router.POST("login", v1.Login)
+	}
+	_ = r.Run(utils.HttpPort)
 }
