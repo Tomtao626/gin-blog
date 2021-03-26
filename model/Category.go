@@ -34,7 +34,7 @@ func CheckUpCategory(id int, name string) (code int) {
 	return errmsg.ERROR
 }
 
-//新增用户
+//新增分类
 func CreateCategory(data *Category) int {
 	err := db.Create(&data).Error
 	if err != nil {
@@ -43,17 +43,18 @@ func CreateCategory(data *Category) int {
 	return errmsg.SUCCESS //200
 }
 
-//获取用户列表
-func GetCategorys(pageSize int, pageNum int) []Category {
+//获取分类列表
+func GetCategorys(pageSize int, pageNum int) ([]Category, int64) {
 	var cate []Category
-	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cate).Error
+	var total int64
+	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cate).Count(&total).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, 0
 	}
-	return cate
+	return cate, total
 }
 
-//编辑用户
+//编辑分类
 func EditCategory(id int, data *Category) int {
 	var cate Category
 	var maps = make(map[string]interface{})
@@ -65,7 +66,7 @@ func EditCategory(id int, data *Category) int {
 	return errmsg.SUCCESS
 }
 
-//删除用户
+//删除分类
 func DeleteCategory(id int) int {
 	var cate Category
 	err = db.Where("id = ? ", id).Delete(&cate).Error

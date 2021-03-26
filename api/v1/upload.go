@@ -7,13 +7,17 @@ import (
 	"net/http"
 )
 
-func Upload(c *gin.Context) {
+func UpLoad(c *gin.Context) {
 	file, fileHeader, _ := c.Request.FormFile("file")
+
 	fileSize := fileHeader.Size
-	url, code := model.UploadFile(file, fileSize)
+
+	url, code := model.UpLoadFile(file, fileSize)
+
 	c.JSON(http.StatusOK, gin.H{
-		"status": code,
-		"msg":    errmsg.GetErrMsg(code),
-		"url":    url,
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+		"url":     url,
 	})
+
 }

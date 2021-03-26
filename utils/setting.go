@@ -30,7 +30,7 @@ func init() {
 	}
 	LoadServer(file)
 	LoadData(file)
-	LoadQiniuData(file)
+	LoadQiniu(file)
 }
 
 func LoadServer(file *ini.File) {
@@ -48,7 +48,7 @@ func LoadData(file *ini.File) {
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
 }
 
-func LoadQiniuData(file *ini.File) {
+func LoadQiniu(file *ini.File) {
 	AccessKey = file.Section("qiniu").Key("AccessKey").String()
 	SecretKey = file.Section("qiniu").Key("SecretKey").String()
 	Bucket = file.Section("qiniu").Key("Bucket").String()
