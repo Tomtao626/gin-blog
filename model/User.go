@@ -50,6 +50,16 @@ func CreateUser(data *User) int {
 	return errmsg.SUCCESS //200
 }
 
+//获取用户信息
+func GetUserInfo(id int) (User, int){
+	var user User
+	err := db.Where("id = ?", id).First(&user).Error
+	if err != nil{
+		return user, errmsg.ERROR_USER_NOT_EXIST
+	}
+	return user, errmsg.SUCCESS
+}
+
 //获取用户列表
 func GetUsers(pageSize int, pageNum int) ([]User, int64) {
 	var users []User

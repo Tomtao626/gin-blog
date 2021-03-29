@@ -44,8 +44,14 @@ func AddUser(c *gin.Context) {
 }
 
 //查询单个用户
-func GetUser(c *gin.Context) {
-
+func GetUserInfo(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	data , code := model.GetUserInfo(id)
+	c.JSON(http.StatusOK, gin.H{
+		"status":code,
+		"data":data,
+		"msg":errmsg.GetErrMsg(code),
+	})
 }
 
 //查询用户列表

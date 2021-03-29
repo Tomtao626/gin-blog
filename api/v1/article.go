@@ -8,17 +8,6 @@ import (
 	"strconv"
 )
 
-//查询文章是否存在
-
-//添加文章
-
-//查询单篇文章
-
-//查询文章列表
-
-//编辑文章
-
-//删除文章
 
 //添加文章
 func AddArticle(c *gin.Context) {
@@ -82,7 +71,7 @@ func GetArticles(c *gin.Context) {
 	})
 }
 
-//编辑分类
+//编辑文章
 func EditArticle(c *gin.Context) {
 	var data model.Article
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -94,7 +83,7 @@ func EditArticle(c *gin.Context) {
 	})
 }
 
-//删除分类
+//删除文章
 func DeleteArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	code = model.DeleteArticle(id)

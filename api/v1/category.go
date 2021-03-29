@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-//查询单个分类下的文章
 
 //添加分类
 func AddCategory(c *gin.Context) {
@@ -26,11 +25,6 @@ func AddCategory(c *gin.Context) {
 		"data":   data,
 		"msg":    errmsg.GetErrMsg(code),
 	})
-}
-
-//查询单个用户
-func GetCategory(c *gin.Context) {
-
 }
 
 //查询分类列表
