@@ -1,1 +1,7 @@
-POST http://localhost:8000/gin-blog/
+POST http://localhost:8000/api/v1/tags
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "wefddjf"
+}

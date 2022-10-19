@@ -20,7 +20,7 @@ var (
 
 func init() {
 	var err error
-	Cfg, err = ini.Load("conf/app.ini")
+	Cfg, err = ini.Load("app.ini")
 	if err != nil {
 		log.Fatal("Fail to prase 'conf/app.ini': %v", err)
 	}
